@@ -183,7 +183,8 @@ class Astoundify_Job_Manager_Companies {
 		<script type="text/javascript">
 		jQuery(function($) {
 			$('.companies-overview').masonry({
-				itemSelector : '.company-group'
+				itemSelector : '.company-group',
+				isFitWidth   : true
 			});
 		});
 		</script>
