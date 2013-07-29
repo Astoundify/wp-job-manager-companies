@@ -104,7 +104,7 @@ class Astoundify_Job_Manager_Companies {
 		
 		$wp_rewrite->add_rewrite_tag( '%company%', '(.+?)', 'company=' );
 		
-		$rewrite_keywords_structure = $wp_rewrite->root . "company/$rewrite_tag/";
+		$rewrite_keywords_structure = $wp_rewrite->root . "company/%company%/";
 		
 		$new_rule = $wp_rewrite->generate_rewrite_rules( $rewrite_keywords_structure );
 	 
@@ -177,6 +177,18 @@ class Astoundify_Job_Manager_Companies {
 			'show_letters' => true
 		), $atts );
 
+		wp_enqueue_script( 'jquery-masonry' );
+	?>
+
+		<script type="text/javascript">
+		jQuery(function($) {
+			$('.companies-overview').masonry({
+				itemSelector : '.company-group'
+			});
+		});
+		</script>
+	<?php
+
 		return $this->build_company_archive( $atts );
 	}
 
@@ -200,6 +212,7 @@ class Astoundify_Job_Manager_Companies {
 			 WHERE pm.meta_key = '_company_name' 
 			 AND p.post_status = 'publish' 
 			 AND p.post_type = 'job_listing'
+			 GROUP BY pm.meta_value 
 			 ORDER BY pm.meta_value"
 		);
 		$_companies = array();
@@ -224,7 +237,7 @@ class Astoundify_Job_Manager_Companies {
 			if ( ! isset( $_companies[ $letter ] ) )
 				continue;
 
-			$output .= '<li><div id="' . $letter . '" class="company-letter">' . $letter . '</div>';
+			$output .= '<li class="company-group"><div id="' . $letter . '" class="company-letter">' . $letter . '</div>';
 			$output .= '<ul>';
 
 			foreach ( $_companies[ $letter ] as $company_name ) {
