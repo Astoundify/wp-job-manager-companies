@@ -224,7 +224,7 @@ class Astoundify_Job_Manager_Companies {
 			if ( ! isset( $_companies[ $letter ] ) )
 				continue;
 
-			$output .= '<li class="company-letter">' . $letter . '</li>';
+			$output .= '<li><div id="' . $letter . '" class="company-letter">' . $letter . '</div>';
 			$output .= '<ul>';
 
 			foreach ( $_companies[ $letter ] as $company_name ) {
