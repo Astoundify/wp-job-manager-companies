@@ -11,11 +11,11 @@ Stable Tag: 1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Output a list of all companies that have submitted jobs with links to their listings and profile.
+Outputs a list of all companies that have submitted jobs with links to their listings and profile.
 
 == Description ==
 
-Output a list of all companies that have submitted jobs with links to their listings and profile.
+Outputs a list of all companies that have submitted jobs with links to their listings and profile.
 
 = Where can I use this? =
 
