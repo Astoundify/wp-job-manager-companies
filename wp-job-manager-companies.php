@@ -135,7 +135,7 @@ class Astoundify_Job_Manager_Companies {
 		if ( ! get_query_var( 'company' ) )
 			return;
 
-		locate_template( apply_filters( 'ajmc_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php' ) ) ), true );
+		locate_template( apply_filters( 'ajmc_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php' ) ), true );
 
 		exit();
 	}
