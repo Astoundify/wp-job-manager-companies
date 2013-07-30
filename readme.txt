@@ -17,6 +17,10 @@ Output a list of all companies that have submitted jobs with links to their list
 
 Output a list of all companies that have submitted jobs with links to their listings and profile.
 
+= Where can I use this? =
+
+Astoundify has released the first fully integrated WP Job Manager theme. Check out ["Jobify"](http://themeforest.net/item/jobify-job-board-wordpress-theme/5247604?ref=Astoundify)
+
 == Installation ==
 
 1. Install and Activate
