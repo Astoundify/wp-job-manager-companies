@@ -150,7 +150,7 @@ class Astoundify_Job_Manager_Companies {
 	 * @return void
 	 */
 	public function posts_filter( $query ) {
-		if ( ! get_query_var( $this->slug ) )
+		if ( ! get_query_var( $this->slug ) || ! $query->is_main_query() )
 			return;
 
 		$meta_query = array(
