@@ -20,6 +20,11 @@ class Astoundify_Job_Manager_Companies {
 	private static $instance;
 
 	/**
+	 * @var slug
+	 */
+	private $slug;
+
+	/**
 	 * Make sure only one instance is only running.
 	 */
 	public static function instance() {
@@ -57,7 +62,12 @@ class Astoundify_Job_Manager_Companies {
 
 		$this->lang_dir     = apply_filters( 'ajmc_lang_dir',     trailingslashit( $this->plugin_dir . 'languages' ) );
 
-		$this->domain       = 'ajmc'; 
+		$this->domain       = 'ajmc';
+
+		/**
+		 * The slug for creating permalinks
+		 */
+		$this->slug         = apply_filters( 'ajmc_company_slug', 'company' );
 	}
 
 	/**
@@ -73,9 +83,7 @@ class Astoundify_Job_Manager_Companies {
 		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'template_redirect', array( $this, 'template_loader' ) );
-		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ));
-
-		$this->load_textdomain();
+		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ) );
 	}
 
 	/**
@@ -102,9 +110,9 @@ class Astoundify_Job_Manager_Companies {
 	public function add_rewrite_rule() {
 		global $wp_rewrite;
 		
-		$wp_rewrite->add_rewrite_tag( '%company%', '(.+?)', 'company=' );
+		$wp_rewrite->add_rewrite_tag( '%company%', '(.+?)', $this->slug . '=' );
 		
-		$rewrite_keywords_structure = $wp_rewrite->root . "company/%company%/";
+		$rewrite_keywords_structure = $wp_rewrite->root . $this->slug ."/%company%/";
 		
 		$new_rule = $wp_rewrite->generate_rewrite_rules( $rewrite_keywords_structure );
 	 
@@ -142,13 +150,13 @@ class Astoundify_Job_Manager_Companies {
 	 * @return void
 	 */
 	public function posts_filter( $query ) {
-		if ( ! get_query_var( 'company' ) )
+		if ( ! get_query_var( $this->slug ) )
 			return;
 
 		$meta_query = array(
 			array(
 				'key'   => '_company_name',
-				'value' => urldecode( get_query_var( 'company' ) )
+				'value' => urldecode( get_query_var( $this->slug ) )
 			)
 		);
 
@@ -269,38 +277,12 @@ class Astoundify_Job_Manager_Companies {
 		$company_name = urlencode( $company_name );
 
 		if ( $wp_rewrite->permalink_structure == '' ) {
-			$url = home_url( 'index.php?company=' . $company_name );
+			$url = home_url( 'index.php?'. $this->slug . '=' . $company_name );
 		} else {
-			$url = home_url( '/company/' . trailingslashit( $company_name ) );
+			$url = home_url( '/' . $this->slug . '/' . trailingslashit( $company_name ) );
 		}
 
 		return esc_url( $url );
-	}
-
-	/**
-	 * Loads the plugin language files
-	 *
-	 * @since WP Job Manager - Company Profiles 1.0
-	 */
-	public function load_textdomain() {
-		// Traditional WordPress plugin locale filter
-		$locale        = apply_filters( 'plugin_locale', get_locale(), $this->domain );
-		$mofile        = sprintf( '%1$s-%2$s.mo', $this->domain, $locale );
-
-		// Setup paths to current locale file
-		$mofile_local  = $this->lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/' . $this->domain . '/' . $mofile;
-
-		// Look in global /wp-content/languages/ajmc folder
-		if ( file_exists( $mofile_global ) ) {
-			return load_textdomain( $this->domain, $mofile_global );
-
-		// Look in local /wp-content/plugins/ajmc/languages/ folder
-		} elseif ( file_exists( $mofile_local ) ) {
-			return load_textdomain( $this->domain, $mofile_local );
-		}
-
-		return false;
 	}
 }
 add_action( 'init', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
