@@ -80,6 +80,8 @@ class Astoundify_Job_Manager_Companies {
 	private function setup_actions() {
 		add_shortcode( 'job_manager_companies', array( $this, 'shortcode' ) );
 		
+		add_filter( 'wp_title', array( $this, 'page_title' ), 20, 2 );
+
 		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ) );
@@ -286,6 +288,28 @@ class Astoundify_Job_Manager_Companies {
 		}
 
 		return esc_url( $url );
+	}
+
+	/**
+	 * Creates a nicely formatted and more specific title element text for output
+	 * in head of document, based on current view.
+	 *
+	 * @since Jobify 1.0
+	 *
+	 * @param string $title Default title text for current view.
+	 * @param string $sep Optional separator.
+	 * @return string Filtered title.
+	 */
+	function page_title( $title, $sep ) {
+		global $paged, $page;
+
+		if ( ! get_query_var( 'company' ) )
+			return $title;
+
+		$company = urldecode( get_query_var( 'company' ) );
+		$title   = "$company $sep $title";
+
+		return $title;
 	}
 }
 add_action( 'init', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
