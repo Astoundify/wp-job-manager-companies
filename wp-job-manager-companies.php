@@ -82,8 +82,8 @@ class Astoundify_Job_Manager_Companies {
 		
 		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
-		add_action( 'template_redirect', array( $this, 'template_loader' ) );
 		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ) );
+		add_action( 'template_redirect', array( $this, 'template_loader' ) );
 	}
 
 	/**
@@ -135,7 +135,10 @@ class Astoundify_Job_Manager_Companies {
 		if ( ! get_query_var( 'company' ) )
 			return;
 
-		locate_template( apply_filters( 'ajmc_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php' ) ), true );
+		if ( 0 == $wp_query->found_posts )
+			locate_template( apply_filters( 'ajmc_404', array( '404.php' ) ), true );
+		else
+			locate_template( apply_filters( 'ajmc_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php' ) ), true );
 
 		exit();
 	}
