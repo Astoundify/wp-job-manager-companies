@@ -5,7 +5,7 @@
  * Description: Output a list of all companies that have posted a job, with a link to a company profile.
  * Author:      Astoundify
  * Author URI:  http://astoundify.com
- * Version:     1.1
+ * Version:     1.2
  * Text Domain: ajmc
  */
 
@@ -291,10 +291,9 @@ class Astoundify_Job_Manager_Companies {
 	}
 
 	/**
-	 * Creates a nicely formatted and more specific title element text for output
-	 * in head of document, based on current view.
+	 * Set a page title when viewing an individual company.
 	 *
-	 * @since Jobify 1.0
+	 * @since WP Job Manager - Company Profiles 1.2
 	 *
 	 * @param string $title Default title text for current view.
 	 * @param string $sep Optional separator.
