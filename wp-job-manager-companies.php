@@ -227,7 +227,7 @@ class Astoundify_Job_Manager_Companies {
 		$_companies = array();
 
 		foreach ( $companies as $company ) {
-			$_companies[ $company[0] ][] = $company;
+			$_companies[ strtoupper( $company[0] ) ][] = $company;
 		}
 
 		if ( $atts[ 'show_letters' ] ) {
