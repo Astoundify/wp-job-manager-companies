@@ -306,7 +306,14 @@ class Astoundify_Job_Manager_Companies {
 			return $title;
 
 		$company = urldecode( get_query_var( 'company' ) );
-		$title   = "$company $sep $title";
+
+		$title = get_bloginfo( 'name' );
+
+		$site_description = get_bloginfo( 'description', 'display' );
+		if ( $site_description && ( is_home() || is_front_page() ) )
+			$title = "$title $sep $site_description";
+
+		$title = "$company $sep $title";
 
 		return $title;
 	}
