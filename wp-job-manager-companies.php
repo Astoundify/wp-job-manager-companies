@@ -55,7 +55,7 @@ class Astoundify_Job_Manager_Companies {
 	 */
 	private function setup_globals() {
 		$this->file         = __FILE__;
-		
+
 		$this->basename     = apply_filters( 'ajmc_plugin_basenname', plugin_basename( $this->file ) );
 		$this->plugin_dir   = apply_filters( 'ajmc_plugin_dir_path',  plugin_dir_path( $this->file ) );
 		$this->plugin_url   = apply_filters( 'ajmc_plugin_dir_url',   plugin_dir_url ( $this->file ) );
@@ -79,7 +79,7 @@ class Astoundify_Job_Manager_Companies {
 	 */
 	private function setup_actions() {
 		add_shortcode( 'job_manager_companies', array( $this, 'shortcode' ) );
-		
+
 		add_filter( 'wp_title', array( $this, 'page_title' ), 20, 2 );
 
 		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
@@ -111,15 +111,15 @@ class Astoundify_Job_Manager_Companies {
 	 */
 	public function add_rewrite_rule() {
 		global $wp_rewrite;
-		
+
 		$wp_rewrite->add_rewrite_tag( '%company%', '(.+?)', $this->slug . '=' );
-		
+
 		$rewrite_keywords_structure = $wp_rewrite->root . $this->slug ."/%company%/";
-		
+
 		$new_rule = $wp_rewrite->generate_rewrite_rules( $rewrite_keywords_structure );
-	 
+
 		$wp_rewrite->rules = $new_rule + $wp_rewrite->rules;
-	
+
 		return $wp_rewrite->rules;
 	}
 
@@ -220,13 +220,13 @@ class Astoundify_Job_Manager_Companies {
 		global $wpdb;
 
 		$output      = '';
-		$companies   = $wpdb->get_col( 
+		$companies   = $wpdb->get_col(
 			"SELECT pm.meta_value FROM {$wpdb->postmeta} pm
 			 LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-			 WHERE pm.meta_key = '_company_name' 
-			 AND p.post_status = 'publish' 
+			 WHERE pm.meta_key = '_company_name'
+			 AND p.post_status = 'publish'
 			 AND p.post_type = 'job_listing'
-			 GROUP BY pm.meta_value 
+			 GROUP BY pm.meta_value
 			 ORDER BY pm.meta_value"
 		);
 		$_companies = array();
@@ -234,6 +234,8 @@ class Astoundify_Job_Manager_Companies {
 		foreach ( $companies as $company ) {
 			$_companies[ strtoupper( $company[0] ) ][] = $company;
 		}
+
+		print_r( $_companies );
 
 		if ( $atts[ 'show_letters' ] ) {
 			$output .= '<div class="company-letters">';
@@ -255,7 +257,9 @@ class Astoundify_Job_Manager_Companies {
 			$output .= '<ul>';
 
 			foreach ( $_companies[ $letter ] as $company_name ) {
-				$output .= '<li class="company-name"><a href="' . $this->company_url( $company_name ) . '">' . esc_attr( $company_name ) . '</a></li>';
+				$count = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name ) ) );
+
+				$output .= '<li class="company-name"><a href="' . $this->company_url( $company_name ) . '">' . esc_attr( $company_name ) . ' (' . $count . ')</a></li>';
 			}
 
 			$output .= '</ul>';
@@ -310,10 +314,11 @@ class Astoundify_Job_Manager_Companies {
 		$title = get_bloginfo( 'name' );
 
 		$site_description = get_bloginfo( 'description', 'display' );
+
 		if ( $site_description && ( is_home() || is_front_page() ) )
 			$title = "$title $sep $site_description";
 
-		$title = "$company $sep $title";
+		$title = sprintf( __( 'Jobs at %s', 'job_manager_companies' ), $company ) . " $sep $title";
 
 		return $title;
 	}
