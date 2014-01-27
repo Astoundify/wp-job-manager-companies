@@ -235,8 +235,6 @@ class Astoundify_Job_Manager_Companies {
 			$_companies[ strtoupper( $company[0] ) ][] = $company;
 		}
 
-		print_r( $_companies );
-
 		if ( $atts[ 'show_letters' ] ) {
 			$output .= '<div class="company-letters">';
 
