@@ -5,8 +5,8 @@
  * Description: Output a list of all companies that have posted a job, with a link to a company profile.
  * Author:      Astoundify
  * Author URI:  http://astoundify.com
- * Version:     1.2
- * Text Domain: ajmc
+ * Version:     1.3
+ * Text Domain: wp-job-manager-companies
  */
 
 // Exit if accessed directly
@@ -56,18 +56,18 @@ class Astoundify_Job_Manager_Companies {
 	private function setup_globals() {
 		$this->file         = __FILE__;
 
-		$this->basename     = apply_filters( 'ajmc_plugin_basenname', plugin_basename( $this->file ) );
-		$this->plugin_dir   = apply_filters( 'ajmc_plugin_dir_path',  plugin_dir_path( $this->file ) );
-		$this->plugin_url   = apply_filters( 'ajmc_plugin_dir_url',   plugin_dir_url ( $this->file ) );
+		$this->basename     = plugin_basename( $this->file );
+		$this->plugin_dir   = plugin_dir_path( $this->file );
+		$this->plugin_url   = plugin_dir_url ( $this->file );
 
-		$this->lang_dir     = apply_filters( 'ajmc_lang_dir',     trailingslashit( $this->plugin_dir . 'languages' ) );
+		$this->lang_dir     = trailingslashit( $this->plugin_dir . 'languages' );
 
-		$this->domain       = 'ajmc';
+		$this->domain       = 'wp-job-manager-companies';
 
 		/**
 		 * The slug for creating permalinks
 		 */
-		$this->slug         = apply_filters( 'ajmc_company_slug', 'company' );
+		$this->slug         = apply_filters( 'wp_job_manager_companies_company_slug', 'company' );
 	}
 
 	/**
@@ -138,9 +138,9 @@ class Astoundify_Job_Manager_Companies {
 			return;
 
 		if ( 0 == $wp_query->found_posts )
-			locate_template( apply_filters( 'ajmc_404', array( '404.php' ) ), true );
+			locate_template( apply_filters( 'wp_job_manager_companies_404', array( '404.php' ) ), true );
 		else
-			locate_template( apply_filters( 'ajmc_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php' ) ), true );
+			locate_template( apply_filters( 'wp_job_manager_companies_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php' ) ), true );
 
 		exit();
 	}
@@ -316,7 +316,7 @@ class Astoundify_Job_Manager_Companies {
 		if ( $site_description && ( is_home() || is_front_page() ) )
 			$title = "$title $sep $site_description";
 
-		$title = sprintf( __( 'Jobs at %s', 'job_manager_companies' ), $company ) . " $sep $title";
+		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company ) . " $sep $title";
 
 		return $title;
 	}
