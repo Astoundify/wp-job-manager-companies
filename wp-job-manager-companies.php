@@ -97,7 +97,7 @@ class Astoundify_Job_Manager_Companies {
 	 * @return array $vars The modified array of query variables.
 	 */
 	public function query_vars( $vars ) {
-		$vars[] = 'company';
+		$vars[] = $this->slug;
 
 		return $vars;
 	}
@@ -134,7 +134,7 @@ class Astoundify_Job_Manager_Companies {
 	public function template_loader() {
 		global $wp_query;
 
-		if ( ! get_query_var( 'company' ) )
+		if ( ! get_query_var( $this->slug ) )
 			return;
 
 		if ( 0 == $wp_query->found_posts )
@@ -304,10 +304,10 @@ class Astoundify_Job_Manager_Companies {
 	function page_title( $title, $sep ) {
 		global $paged, $page;
 
-		if ( ! get_query_var( 'company' ) )
+		if ( ! get_query_var( $this->slug ) )
 			return $title;
 
-		$company = urldecode( get_query_var( 'company' ) );
+		$company = urldecode( get_query_var( $this->slug ) );
 
 		$title = get_bloginfo( 'name' );
 
