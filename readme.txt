@@ -37,6 +37,7 @@ Create a `single-company.php` template in your child theme and add any content y
 = 1.3: March 10, 2014 =
 
 * Fix: Update translations
+* Fix: Use defined slug for the rest of the permalinks/checks.
 
 = 1.2: September 21, 2013 =
 
