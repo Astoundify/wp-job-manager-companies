@@ -174,6 +174,7 @@ class Astoundify_Job_Manager_Companies {
 		}
 
 		$query->set( 'post_type', 'job_listing' );
+		$query->set( 'post_status', 'publish' );
 		$query->set( 'meta_query', $meta_query );
 	}
 
