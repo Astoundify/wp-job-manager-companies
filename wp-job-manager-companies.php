@@ -86,6 +86,8 @@ class Astoundify_Job_Manager_Companies {
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ) );
 		add_action( 'template_redirect', array( $this, 'template_loader' ) );
+
+		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 	}
 
 	/**
@@ -320,6 +322,19 @@ class Astoundify_Job_Manager_Companies {
 		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company ) . " $sep $title";
 
 		return $title;
+	}
+
+	/**
+	 * Localisation
+	 *
+	 * @access private
+	 * @return void
+	 */
+	public function load_plugin_textdomain() {
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'wp-job-manager-companies' );
+
+		load_textdomain( 'wp-job-manager-companies', WP_LANG_DIR . "/wp-job-manager-companies/wp-job-manager-companies-$locale.mo" );
+		load_plugin_textdomain( 'wp-job-manager-companies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 }
 add_action( 'init', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
