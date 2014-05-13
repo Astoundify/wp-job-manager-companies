@@ -337,4 +337,4 @@ class Astoundify_Job_Manager_Companies {
 		load_plugin_textdomain( 'wp-job-manager-companies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 }
-add_action( 'init', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
+add_action( 'plugins_loaded', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
