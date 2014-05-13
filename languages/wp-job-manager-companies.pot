@@ -15,22 +15,3 @@ msgstr ""
 #: wp-job-manager-companies.php:322
 msgid "Jobs at %s"
 msgstr ""
-#. Plugin Name of the plugin/theme
-msgid "WP Job Manager - Company Profiles"
-msgstr ""
-
-#. Plugin URI of the plugin/theme
-msgid "https://github.com/astoundify/wp-job-manager-companies"
-msgstr ""
-
-#. Description of the plugin/theme
-msgid "Output a list of all companies that have posted a job, with a link to a company profile."
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "Astoundify"
-msgstr ""
-
-#. Author URI of the plugin/theme
-msgid "http://astoundify.com"
-msgstr ""
