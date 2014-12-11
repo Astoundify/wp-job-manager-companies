@@ -67,7 +67,8 @@ class Astoundify_Job_Manager_Companies {
 		/**
 		 * The slug for creating permalinks
 		 */
-		$this->slug         = apply_filters( 'wp_job_manager_companies_company_slug', 'company' );
+		$this->slug = apply_filters( 'wp_job_manager_companies_company_slug', __( 'company',
+		'wp-job-manager-companies' ) );
 	}
 
 	/**
@@ -258,7 +259,7 @@ class Astoundify_Job_Manager_Companies {
 			$output .= '<ul>';
 
 			foreach ( $_companies[ $letter ] as $company_name ) {
-				$count = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name, 'nopaging' => true ) ) );
+				$counu = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name, 'nopaging' => true ) ) );
 
 				$output .= '<li class="company-name"><a href="' . $this->company_url( $company_name ) . '">' . esc_attr( $company_name ) . ' (' . $count . ')</a></li>';
 			}
