@@ -259,7 +259,7 @@ class Astoundify_Job_Manager_Companies {
 			$output .= '<ul>';
 
 			foreach ( $_companies[ $letter ] as $company_name ) {
-				$counu = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name, 'nopaging' => true ) ) );
+				$count = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name, 'nopaging' => true ) ) );
 
 				$output .= '<li class="company-name"><a href="' . $this->company_url( $company_name ) . '">' . esc_attr( $company_name ) . ' (' . $count . ')</a></li>';
 			}
@@ -285,7 +285,7 @@ class Astoundify_Job_Manager_Companies {
 	public function company_url( $company_name ) {
 		global $wp_rewrite;
 
-		$company_name = urlencode( $company_name );
+		$company_name = rawurlencode( $company_name );
 
 		if ( $wp_rewrite->permalink_structure == '' ) {
 			$url = home_url( 'index.php?'. $this->slug . '=' . $company_name );
