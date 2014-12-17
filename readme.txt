@@ -5,7 +5,7 @@ Plugin URI: http://github.com/astoundify/wp-job-manager-companies
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@appthemer.com&item_name=Donation+for+WP Job Manager+Company+Profiles
 Contributors: Astoundify, SpencerFinnell
 Tags: job, job listing, companies, company list
-Requires at least: 4.1
+Requires at least: 3.6
 Tested up to: 4.1
 Stable Tag: 1.3
 License: GPLv3
