@@ -88,7 +88,7 @@ class Astoundify_Job_Manager_Companies {
 		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ) );
 		add_action( 'template_redirect', array( $this, 'template_loader' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
+		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 	}
 
 	/**
@@ -326,16 +326,24 @@ class Astoundify_Job_Manager_Companies {
 	}
 
 	/**
-	 * Localisation
-	 *
-	 * @access private
-	 * @return void
+	 * Loads the plugin language files
 	 */
-	public function load_plugin_textdomain() {
+	public function load_textdomain() {
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'wp-job-manager-companies' );
-
 		load_textdomain( 'wp-job-manager-companies', WP_LANG_DIR . "/wp-job-manager-companies/wp-job-manager-companies-$locale.mo" );
 		load_plugin_textdomain( 'wp-job-manager-companies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 }
-add_action( 'plugins_loaded', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
+
+/**
+ * Start things up.
+ *
+ * Use this function instead of a global.
+ *
+ * @since 1.0.0
+ */
+function wp_job_manager_companies() {
+	return Astoundify_Job_Manager_Companies::instance();
+}
+
+wp_job_manager_companies();
