@@ -2,11 +2,11 @@
 
 Author URI: http://astoundify.com
 Plugin URI: http://github.com/astoundify/wp-job-manager-companies
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=contact@astoundify.com&item_name=Donation+for+WP Job Manager+Company+Profiles
+Donate link: https://www.paypal.me/astoundify
 Contributors: Astoundify
 Tags: job, job listing, companies, company list
-Requires at least: 4.1
-Tested up to: 4.4
+Requires at least: 4.4 
+Tested up to: 4.4.*
 Stable Tag: 1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
