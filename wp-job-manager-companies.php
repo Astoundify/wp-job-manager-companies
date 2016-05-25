@@ -81,14 +81,14 @@ class Astoundify_Job_Manager_Companies {
 	private function setup_actions() {
 		add_shortcode( 'job_manager_companies', array( $this, 'shortcode' ) );
 
-		add_filter( 'wp_title', array( $this, 'page_title' ), 20, 2 );
+		add_filter( 'pre_get_document_title', array( $this, 'page_title' ), 20 );
 
 		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ) );
 		add_action( 'template_redirect', array( $this, 'template_loader' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 	}
 
 	/**
@@ -305,9 +305,9 @@ class Astoundify_Job_Manager_Companies {
 	 * @param string $sep Optional separator.
 	 * @return string Filtered title.
 	 */
-	function page_title( $title, $sep ) {
+	function page_title($title) {
 		global $paged, $page;
-
+		$sep = apply_filters( 'document_title_separator', '-' );
 		if ( ! get_query_var( $this->slug ) )
 			return $title;
 
@@ -326,24 +326,16 @@ class Astoundify_Job_Manager_Companies {
 	}
 
 	/**
-	 * Loads the plugin language files
+	 * Localisation
+	 *
+	 * @access private
+	 * @return void
 	 */
-	public function load_textdomain() {
+	public function load_plugin_textdomain() {
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'wp-job-manager-companies' );
+
 		load_textdomain( 'wp-job-manager-companies', WP_LANG_DIR . "/wp-job-manager-companies/wp-job-manager-companies-$locale.mo" );
 		load_plugin_textdomain( 'wp-job-manager-companies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 }
-
-/**
- * Start things up.
- *
- * Use this function instead of a global.
- *
- * @since 1.0.0
- */
-function wp_job_manager_companies() {
-	return Astoundify_Job_Manager_Companies::instance();
-}
-
-wp_job_manager_companies();
+add_action( 'plugins_loaded', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
