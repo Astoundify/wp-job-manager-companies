@@ -143,7 +143,7 @@ class Astoundify_Job_Manager_Companies {
 		if ( 0 == $wp_query->found_posts )
 			locate_template( apply_filters( 'wp_job_manager_companies_404', array( '404.php' ) ), true );
 		else
-			locate_template( apply_filters( 'wp_job_manager_companies_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php' ) ), true );
+			locate_template( apply_filters( 'wp_job_manager_companies_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php', 'index.php' ) ), true );
 
 		exit();
 	}
