@@ -112,8 +112,7 @@ class Astoundify_Job_Manager_Companies {
 	 *
 	 * @return obj $wp_rewrite
 	 */
-	public function add_rewrite_rule() {
-		global $wp_rewrite;
+	public function add_rewrite_rule( $wp_rewrite ) {
 
 		$wp_rewrite->add_rewrite_tag( '%company%', '(.+?)', $this->slug . '=' );
 
