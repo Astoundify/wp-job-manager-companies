@@ -85,7 +85,7 @@ class Astoundify_Job_Manager_Companies {
 
 		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
-		add_filter( 'pre_get_posts', array( $this, 'posts_filter' ) );
+		add_action( 'pre_get_posts', array( $this, 'posts_filter' ) );
 		add_action( 'template_redirect', array( $this, 'template_loader' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
@@ -140,7 +140,7 @@ class Astoundify_Job_Manager_Companies {
 			return;
 
 		if ( 0 == $wp_query->found_posts )
-			locate_template( apply_filters( 'wp_job_manager_companies_404', array( '404.php' ) ), true );
+			locate_template( apply_filters( 'wp_job_manager_companies_404', array( '404.php', 'index.php' ) ), true );
 		else
 			locate_template( apply_filters( 'wp_job_manager_companies_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php', 'index.php' ) ), true );
 
@@ -287,9 +287,9 @@ class Astoundify_Job_Manager_Companies {
 		$company_name = rawurlencode( $company_name );
 
 		if ( $wp_rewrite->permalink_structure == '' ) {
-			$url = home_url( 'index.php?'. $this->slug . '=' . $company_name );
+			$url = add_query_arg( $this->slug, $company_name, home_url( 'index.php' ) );
 		} else {
-			$url = home_url( '/' . $this->slug . '/' . trailingslashit( $company_name ) );
+			$url = user_trailingslashit( home_url( "/{$this->slug}/{$company_name}" ) );
 		}
 
 		return esc_url( $url );
