@@ -41,6 +41,9 @@ class Astoundify_Job_Manager_Companies {
 	 * @since WP Job Manager - Company Profiles 1.0
 	 */
 	public function __construct() {
+		if ( ! class_exists( 'WP_Job_Manager' ) ){
+			return;
+		}
 		$this->setup_globals();
 		$this->setup_actions();
 	}
@@ -223,8 +226,8 @@ class Astoundify_Job_Manager_Companies {
 	public function build_company_archive( $atts ) {
 		global $wpdb;
 
-		$output      = '';
-		$companies   = $wpdb->get_col(
+		$output = '';
+		$companies_raw = $wpdb->get_col(
 			"SELECT pm.meta_value FROM {$wpdb->postmeta} pm
 			 LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
 			 WHERE pm.meta_key = '_company_name'
@@ -234,14 +237,44 @@ class Astoundify_Job_Manager_Companies {
 			 ORDER BY pm.meta_value"
 		);
 
+		/* Add Company Count */
+		$companies = array();
+		foreach( $companies_raw as $company ){
+			$args = array(
+				'post_type'      => 'job_listing',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key'     => '_company_name',
+						'value'   => $company,
+						'compare' => '=',
+					),
+					array(
+						'key'     => '_filled',
+						'value'   => '1',
+						'compare' => '!=',
+					),
+				),
+			);
+			$result = new WP_Query( $args );
+			if( $result->found_posts ){
+				$companies[] = array(
+					'name'  => $company,
+					'label' => "{$company} ({$result->found_posts})",
+				);
+			}
+		}
+
 		/* Group */
 		$group = range( 'A', 'Z' );
 		$group[] = '0-9';
 
 		$_companies = array();
-		foreach ( $companies as $company ) {
-			if( in_array( $company[0], range( 'A', 'Z' ) ) ){
-				$_companies[ strtoupper( $company[0] ) ][] = $company;
+		foreach ( $companies as $k => $company ) {
+			if( in_array( $company['name'][0], range( 'A', 'Z' ) ) ){
+				$_companies[ strtoupper( $company['name'][0] ) ][] = $company;
 			}
 			else{
 				$_companies['0-9'][] = $company;
@@ -268,10 +301,9 @@ class Astoundify_Job_Manager_Companies {
 			$output .= '<li class="company-group"><div id="' . $letter . '" class="company-letter">' . $letter . '</div>';
 			$output .= '<ul>';
 
-			foreach ( $_companies[ $letter ] as $company_name ) {
-				$count = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name, 'nopaging' => true ) ) );
+			foreach ( $_companies[ $letter ] as $k => $company ) {
 
-				$output .= '<li class="company-name"><a href="' . $this->company_url( $company_name ) . '">' . esc_attr( $company_name ) . ' (' . $count . ')</a></li>';
+				$output .= '<li class="company-name"><a href="' . $this->company_url( $company['name'] ) . '">' . esc_attr( $company['label'] ) . '</a></li>';
 			}
 
 			$output .= '</ul>';
@@ -339,7 +371,7 @@ class Astoundify_Job_Manager_Companies {
 	 * Set Archive Title
 	 * this filter is introduce in WP 4.1
 	 */
-	function archive_title( $title ) {
+	public function archive_title( $title ) {
 		if ( ! get_query_var( $this->slug ) ){
 			return $title;
 		}
