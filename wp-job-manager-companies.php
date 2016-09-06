@@ -37,8 +37,7 @@ class Astoundify_Job_Manager_Companies {
 
 	/**
 	 * Start things up.
-	 *
-	 * @since WP Job Manager - Company Profiles 1.0
+	 * @since 1.0
 	 */
 	public function __construct() {
 		if ( ! class_exists( 'WP_Job_Manager' ) ){
@@ -52,69 +51,75 @@ class Astoundify_Job_Manager_Companies {
 	 * Set some smart defaults to class variables. Allow some of them to be
 	 * filtered to allow for early overriding.
 	 *
-	 * @since WP Job Manager - Company Profiles 1.0
-	 *
+	 * @since 1.0
 	 * @return void
 	 */
 	private function setup_globals() {
-		$this->file         = __FILE__;
 
-		$this->basename     = plugin_basename( $this->file );
-		$this->plugin_dir   = plugin_dir_path( $this->file );
-		$this->plugin_url   = plugin_dir_url ( $this->file );
+		/* Plugin Path */
+		$this->plugin_dir = plugin_dir_path( __FILE__ );
 
-		$this->lang_dir     = trailingslashit( $this->plugin_dir . 'languages' );
+		/* Plugin URI */
+		$this->plugin_url = plugin_dir_url ( __FILE__ );
 
-		$this->domain       = 'wp-job-manager-companies';
-
-		/**
-		 * The slug for creating permalinks
-		 */
-		$this->slug = apply_filters( 'wp_job_manager_companies_company_slug', __( 'company',
-		'wp-job-manager-companies' ) );
+		/* The slug for creating permalinks */
+		$this->slug = apply_filters( 'wp_job_manager_companies_company_slug', 'company' );
 	}
 
 	/**
 	 * Setup the default hooks and actions
-	 *
-	 * @since WP Job Manager - Company Profiles 1.0
-	 *
+	 * @since 1.0
 	 * @return void
 	 */
-	private function setup_actions() {
-		add_shortcode( 'job_manager_companies', array( $this, 'shortcode' ) );
+	private function setup_actions(){
 
-		add_filter( 'pre_get_document_title', array( $this, 'page_title' ), 20 );
-		add_filter( 'get_the_archive_title', array( $this, 'archive_title' ) );
+		/* i18n */
+		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
-		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
+		/* Add Query Var */
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
+
+		/* Add Rewrite Rules */
+		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
+
+		/* Set Query */
 		add_action( 'pre_get_posts', array( $this, 'posts_filter' ) );
+
+		/* Create Custom Template */
 		add_action( 'template_redirect', array( $this, 'template_loader' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
+		/* Filter Head Title */
+		add_filter( 'pre_get_document_title', array( $this, 'document_title' ), 20 );
+
+		/* Filter Archive Title */
+		add_filter( 'get_the_archive_title', array( $this, 'archive_title' ) );
+
+		/* Shortcode [job_manager_companies] */
+		add_shortcode( 'job_manager_companies', array( $this, 'job_manager_companies_shortcode' ) );
+	}
+
+	/**
+	 * Localisation
+	 */
+	public function load_plugin_textdomain() {
+		load_plugin_textdomain( 'wp-job-manager-companies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	/**
 	 * Define "company" as a valid query variable.
-	 *
-	 * @since WP Job Manager - Company Profiles 1.0
-	 *
+	 * @since 1.0
 	 * @param array $vars The array of existing query variables.
 	 * @return array $vars The modified array of query variables.
 	 */
 	public function query_vars( $vars ) {
 		$vars[] = $this->slug;
-
 		return $vars;
 	}
 
 	/**
 	 * Create the custom rewrite tag, then add it as a custom structure.
-	 *
-	 * @since WP Job Manager - Company Profiles 1.0
-	 *
-	 * @return obj $wp_rewrite
+	 * @since 1.0
+	 * @return obj $wp_rewrite->rules
 	 */
 	public function add_rewrite_rule( $wp_rewrite ) {
 
@@ -129,27 +134,6 @@ class Astoundify_Job_Manager_Companies {
 		return $wp_rewrite->rules;
 	}
 
-	/**
-	 * If we detect the "company" query variable, load our custom template
-	 * file. This will check a child theme so it can be overwritten as well.
-	 *
-	 * @since WP Job Manager - Company Profiles 1.0
-	 *
-	 * @return void
-	 */
-	public function template_loader() {
-		global $wp_query;
-
-		if ( ! get_query_var( $this->slug ) )
-			return;
-
-		if ( 0 == $wp_query->found_posts )
-			locate_template( apply_filters( 'wp_job_manager_companies_404', array( '404.php', 'index.php' ) ), true );
-		else
-			locate_template( apply_filters( 'wp_job_manager_companies_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php', 'index.php' ) ), true );
-
-		exit();
-	}
 
 	/**
 	 * Potentialy filter the query. If we detect the "company" query variable
@@ -184,22 +168,88 @@ class Astoundify_Job_Manager_Companies {
 		$query->set( 'meta_query', $meta_query );
 	}
 
+
 	/**
-	 * Register the `[job_manager_companies]` shortcode.
+	 * If we detect the "company" query variable, load our custom template
+	 * file. This will check a child theme so it can be overwritten as well.
 	 *
 	 * @since WP Job Manager - Company Profiles 1.0
 	 *
+	 * @return void
+	 */
+	public function template_loader() {
+		global $wp_query;
+
+		if ( ! get_query_var( $this->slug ) )
+			return;
+
+		if ( 0 == $wp_query->found_posts )
+			locate_template( apply_filters( 'wp_job_manager_companies_404', array( '404.php', 'index.php' ) ), true );
+		else
+			locate_template( apply_filters( 'wp_job_manager_companies_templates', array( 'single-company.php', 'taxonomy-job_listing_category.php', 'index.php' ) ), true );
+
+		exit();
+	}
+
+
+	/**
+	 * Set a page title when viewing an individual company.
+	 *
+	 * @since WP Job Manager - Company Profiles 1.2
+	 *
+	 * @param string $title Default title text for current view.
+	 * @param string $sep Optional separator.
+	 * @return string Filtered title.
+	 */
+	public function document_title($title) {
+		global $paged, $page;
+		$sep = apply_filters( 'document_title_separator', '-' );
+		if ( ! get_query_var( $this->slug ) )
+			return $title;
+
+		$company = urldecode( get_query_var( $this->slug ) );
+
+		$title = get_bloginfo( 'name' );
+
+		$site_description = get_bloginfo( 'description', 'display' );
+
+		if ( $site_description && ( is_home() || is_front_page() ) )
+			$title = "$title $sep $site_description";
+
+		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company ) . " $sep $title";
+
+		return $title;
+	}
+
+	/**
+	 * Set Archive Title
+	 * this filter is introduce in WP 4.1
+	 */
+	public function archive_title( $title ) {
+		if ( ! get_query_var( $this->slug ) ){
+			return $title;
+		}
+
+		$company = urldecode( get_query_var( $this->slug ) );
+		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company );
+
+		return $title;
+	}
+
+	/**
+	 * Register the `[job_manager_companies]` shortcode.
+	 * @since 1.0
 	 * @param array $atts
 	 * @return string The shortcode HTML output
 	 */
-	public function shortcode( $atts ) {
+	public function job_manager_companies_shortcode( $atts ) {
 		$atts = shortcode_atts( array(
 			'show_letters' => true
 		), $atts );
 
+		ob_start();
 		wp_enqueue_script( 'jquery-masonry' );
 	?>
-
 		<script type="text/javascript">
 		jQuery(function($) {
 			$('.companies-overview').masonry({
@@ -209,8 +259,8 @@ class Astoundify_Job_Manager_Companies {
 		});
 		</script>
 	<?php
-
-		return $this->build_company_archive( $atts );
+		echo $this->build_company_archive( $atts );
+		return ob_get_clean();
 	}
 
 	/**
@@ -338,58 +388,6 @@ class Astoundify_Job_Manager_Companies {
 		return esc_url( $url );
 	}
 
-	/**
-	 * Set a page title when viewing an individual company.
-	 *
-	 * @since WP Job Manager - Company Profiles 1.2
-	 *
-	 * @param string $title Default title text for current view.
-	 * @param string $sep Optional separator.
-	 * @return string Filtered title.
-	 */
-	function page_title($title) {
-		global $paged, $page;
-		$sep = apply_filters( 'document_title_separator', '-' );
-		if ( ! get_query_var( $this->slug ) )
-			return $title;
-
-		$company = urldecode( get_query_var( $this->slug ) );
-
-		$title = get_bloginfo( 'name' );
-
-		$site_description = get_bloginfo( 'description', 'display' );
-
-		if ( $site_description && ( is_home() || is_front_page() ) )
-			$title = "$title $sep $site_description";
-
-		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company ) . " $sep $title";
-
-		return $title;
-	}
-
-	/**
-	 * Set Archive Title
-	 * this filter is introduce in WP 4.1
-	 */
-	public function archive_title( $title ) {
-		if ( ! get_query_var( $this->slug ) ){
-			return $title;
-		}
-
-		$company = urldecode( get_query_var( $this->slug ) );
-		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company );
-
-		return $title;
-	}
-
-	/**
-	 * Localisation
-	 *
-	 * @access private
-	 * @return void
-	 */
-	public function load_plugin_textdomain() {
-		load_plugin_textdomain( 'wp-job-manager-companies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	}
 }
+
 add_action( 'plugins_loaded', array( 'Astoundify_Job_Manager_Companies', 'instance' ) );
