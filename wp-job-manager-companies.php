@@ -82,6 +82,7 @@ class Astoundify_Job_Manager_Companies {
 		add_shortcode( 'job_manager_companies', array( $this, 'shortcode' ) );
 
 		add_filter( 'pre_get_document_title', array( $this, 'page_title' ), 20 );
+		add_filter( 'get_the_archive_title', array( $this, 'archive_title' ) );
 
 		add_action( 'generate_rewrite_rules', array( $this, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
@@ -320,6 +321,21 @@ class Astoundify_Job_Manager_Companies {
 			$title = "$title $sep $site_description";
 
 		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company ) . " $sep $title";
+
+		return $title;
+	}
+
+	/**
+	 * Set Archive Title
+	 * this filter is introduce in WP 4.1
+	 */
+	function archive_title( $title ) {
+		if ( ! get_query_var( $this->slug ) ){
+			return $title;
+		}
+
+		$company = urldecode( get_query_var( $this->slug ) );
+		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company );
 
 		return $title;
 	}
