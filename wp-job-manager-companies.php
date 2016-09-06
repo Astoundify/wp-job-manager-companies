@@ -233,16 +233,26 @@ class Astoundify_Job_Manager_Companies {
 			 GROUP BY pm.meta_value
 			 ORDER BY pm.meta_value"
 		);
-		$_companies = array();
 
+		/* Group */
+		$group = range( 'A', 'Z' );
+		$group[] = '0-9';
+
+		$_companies = array();
 		foreach ( $companies as $company ) {
-			$_companies[ strtoupper( $company[0] ) ][] = $company;
+			if( in_array( $company[0], range( 'A', 'Z' ) ) ){
+				$_companies[ strtoupper( $company[0] ) ][] = $company;
+			}
+			else{
+				$_companies['0-9'][] = $company;
+			}
 		}
+
 
 		if ( $atts[ 'show_letters' ] ) {
 			$output .= '<div class="company-letters">';
 
-			foreach ( range( 'A', 'Z' ) as $letter ) {
+			foreach ( $group as $letter ) {
 				$output .= '<a href="#' . $letter . '">' . $letter . '</a>';
 			}
 
@@ -251,7 +261,7 @@ class Astoundify_Job_Manager_Companies {
 
 		$output .= '<ul class="companies-overview">';
 
-		foreach ( range( 'A', 'Z' ) as $letter ) {
+		foreach ( $group as $letter ) {
 			if ( ! isset( $_companies[ $letter ] ) )
 				continue;
 
