@@ -285,7 +285,7 @@ class Astoundify_Job_Manager_Companies {
 	public function company_url( $company_name ) {
 		global $wp_rewrite;
 
-		$company_name = rawurlencode( $company_name );
+		$company_name = sanitize_title (rawurlencode( $company_name ) );
 
 		if ( $wp_rewrite->permalink_structure == '' ) {
 			$url = home_url( 'index.php?'. $this->slug . '=' . $company_name );
