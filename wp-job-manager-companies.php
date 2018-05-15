@@ -259,9 +259,11 @@ class Astoundify_Job_Manager_Companies {
 			$output .= '<ul>';
 
 			foreach ( $_companies[ $letter ] as $company_name ) {
-				$count = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name, 'nopaging' => true ) ) );
+				$count = count( get_posts( array( 'post_type' => 'job_listing', 'meta_key' => '_company_name', 'meta_value' => $company_name, 'nopaging' => true, 'lang' => '' ) ) );
 
-				$output .= '<li class="company-name"><a href="' . $this->company_url( $company_name ) . '">' . esc_attr( $company_name ) . ' (' . $count . ')</a></li>';
+				if ( apply_filters( 'wp_job_manager_companies_show_empty_companies', true ) ) {
+					$output .= '<li class="company-name"><a href="' . $this->company_url( $company_name ) . '">' . esc_attr( $company_name ) . ' (' . $count . ')</a></li>';
+				}
 			}
 
 			$output .= '</ul>';
