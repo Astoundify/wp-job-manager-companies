@@ -6,7 +6,7 @@ Donate link: https://www.paypal.me/astoundify
 Contributors: Astoundify
 Tags: job, job listing, companies, company list
 Requires at least: 4.4 
-Tested up to: 4.6
+Tested up to: 4.9.8
 Stable Tag: 1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
