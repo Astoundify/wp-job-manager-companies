@@ -6,8 +6,8 @@ Donate link: https://www.paypal.me/astoundify
 Contributors: Astoundify
 Tags: job, job listing, companies, company list
 Requires at least: 4.4 
-Tested up to: 4.9.8
-Stable Tag: 1.3
+Tested up to: 5.5.3
+Stable Tag: 1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -33,6 +33,12 @@ Astoundify has released the first fully integrated WP Job Manager theme. Check o
 Create a `single-company.php` template in your child theme and add any content you desire.
 
 == Changelog ==
+
+= 1.4: November 27, 2020 =
+
+* Compatibility check with php 7.4
+* Compatibility check with WordPress 5.5.3
+* Compatibility check with latest WP Job Manager
 
 = 1.3: March 10, 2014 =
 
