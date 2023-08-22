@@ -6,8 +6,8 @@ Donate link: https://www.paypal.me/astoundify
 Contributors: Astoundify
 Tags: job, job listing, companies, company list
 Requires at least: 4.4 
-Tested up to: 6.0.1
-Stable Tag: 1.6
+Tested up to: 6.3
+Stable Tag: 1.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,6 +58,11 @@ If you like this plugin, consider exploring our other themes and plugins:
 Create a `single-company.php` template in your child theme and add any content you desire.
 
 == Changelog ==
+
+= 1.7: August 22, 2023 =
+* Compatibility check with WordPress 6.3
+* Compatibility check with latest WP Job Manager 1.41.0
+* Fix: PHP 8.2 compatibility.
 
 = 1.6: July 20, 2022 =
 * Compatibility check with WordPress 6.0.1

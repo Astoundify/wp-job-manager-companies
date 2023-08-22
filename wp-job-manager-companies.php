@@ -53,6 +53,14 @@ class Astoundify_Job_Manager_Companies {
 	 *
 	 * @return void
 	 */
+	 
+	public $file;
+	public $basename;
+	public $plugin_dir;
+	public $plugin_url;
+	public $lang_dir;
+	public $domain;
+	 
 	private function setup_globals() {
 		$this->file         = __FILE__;
 
