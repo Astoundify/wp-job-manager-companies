@@ -5,7 +5,7 @@
  * Description: Output a list of all companies that have posted a job, with a link to a company profile.
  * Author:      Astoundify
  * Author URI:  http://astoundify.com
- * Version:     1.7
+ * Version:     1.8
  * Text Domain: wp-job-manager-companies
  */
 
@@ -293,6 +293,10 @@ class Astoundify_Job_Manager_Companies {
 	public function company_url( $company_name ) {
 		global $wp_rewrite;
 
+		// Sanitize the user input
+		$company_name = sanitize_text_field( $company_name );
+
+		// Encode the sanitized company name
 		$company_name = rawurlencode( $company_name );
 
 		if ( $wp_rewrite->permalink_structure == '' ) {
@@ -313,13 +317,14 @@ class Astoundify_Job_Manager_Companies {
 	 * @param string $sep Optional separator.
 	 * @return string Filtered title.
 	 */
-	function page_title($title) {
+	public function page_title($title) {
 		global $paged, $page;
 		$sep = apply_filters( 'document_title_separator', '-' );
 		if ( ! get_query_var( $this->slug ) )
 			return $title;
 
-		$company = urldecode( get_query_var( $this->slug ) );
+		// Sanitize the user input
+		$company = sanitize_text_field( urldecode( get_query_var( $this->slug ) ) );
 
 		$title = get_bloginfo( 'name' );
 
@@ -328,7 +333,8 @@ class Astoundify_Job_Manager_Companies {
 		if ( $site_description && ( is_home() || is_front_page() ) )
 			$title = "$title $sep $site_description";
 
-		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), $company ) . " $sep $title";
+		// Escape the user input before outputting
+		$title = sprintf( __( 'Jobs at %s', 'wp-job-manager-companies' ), esc_html( $company ) ) . " $sep $title";
 
 		return $title;
 	}
